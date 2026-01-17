@@ -12,3 +12,10 @@ __pycache__/
 # Environment
 .env
 .venv/
+
+# Internal/marketing files
+LINKEDIN_POST.md
+PUBLICATION_CHECKLIST.md
+RELEASE_NOTES.md
+repo-info.json
+validate_mcp.py
