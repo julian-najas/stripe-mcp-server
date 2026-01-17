@@ -1,6 +1,5 @@
-# Ignoring previous artifacts
+# This file tells Git which files (or patterns) it should ignore
 
-# Ignore the following files
-stripe_demo.db
+*.db
 uvicorn.err
 uvicorn.out
