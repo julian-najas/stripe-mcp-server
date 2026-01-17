@@ -49,11 +49,6 @@ Production-oriented FastAPI + MCP server for Stripe PaymentIntents with persiste
 
 ```bash
 git add README.md
-git commit -m "docs: restore Spanish README and remove emojis"
+git commit -m "docs: remove follow-up list from README"
 git push
 ```
-
-Cuando esté subido, seguimos con:
-- Coverage badge
-- Demo live
-- Diagrama
