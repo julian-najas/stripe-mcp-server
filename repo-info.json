@@ -1,1 +1,0 @@
-{"description": "Industrial FastAPI + MCP server for Stripe PaymentIntents (idempotency, verified webhooks, tests.", "topics": ["fastapi", "stripe", "mcp", "payments", "webhooks", "idempotency", "ai-agents", "backend"]}
