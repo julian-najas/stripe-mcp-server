@@ -3,6 +3,7 @@
 [![CI](https://github.com/julian-najas/stripe-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/julian-najas/stripe-mcp-server/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-3120/)
+![Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen)
 [![GitHub stars](https://img.shields.io/github/stars/julian-najas/stripe-mcp-server?style=social)](https://github.com/julian-najas/stripe-mcp-server)
 
 > **Industrial-grade FastAPI + MCP server for Stripe PaymentIntents**  
@@ -44,7 +45,8 @@ uvicorn app.main:app --reload --port 8000
 ```
 
 🌐 **API Docs**: http://localhost:8000/docs  
-🔍 **Health check**: http://localhost:8000/health
+🔍 **Health check**: http://localhost:8000/health  
+🚀 **Live demo setup**: See [`LIVE_DEMO.md`](./LIVE_DEMO.md) for instant public URL
 
 ---
 
@@ -91,6 +93,33 @@ SQLAlchemy Models / Stripe API
 ```
 
 **MCP endpoint**: `/mcp` (stdio or SSE transport)
+
+**Visual architecture:**
+
+```mermaid
+graph TB
+    AG[AI Agent] -->|JSON-RPC| MCP[/mcp endpoint]
+    HTTP[HTTP Request] --> ROUTER[FastAPI Router]
+    MCP --> ROUTER
+    ROUTER --> PAYMENT[PaymentService]
+    ROUTER --> WEBHOOK[WebhookService]
+    PAYMENT --> REPO[PaymentRepository]
+    WEBHOOK --> REPO
+    REPO --> DB[(SQLite/PostgreSQL)]
+    PAYMENT -.->|API calls| STRIPE[Stripe API]
+    WEBHOOK -.->|Verify HMAC| STRIPE
+    
+    style MCP fill:#e1f5ff
+    style PAYMENT fill:#fff4e6
+    style WEBHOOK fill:#fff4e6
+    style STRIPE fill:#635bff,color:#fff
+```
+
+**Key components:**
+- **MCP Layer**: Exposes only `payments`-tagged tools to AI agents
+- **Service Layer**: Business logic (idempotency, webhook verification)
+- **Repository Layer**: Data persistence and Stripe API interaction
+- **Database**: SQLite (dev) or PostgreSQL (prod)
 
 ---
 
