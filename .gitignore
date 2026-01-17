@@ -1,5 +1,14 @@
-# This file tells Git which files (or patterns) it should ignore
-
+# Database
 *.db
+
+# Server logs
 uvicorn.err
 uvicorn.out
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment
+.env
+.venv/
