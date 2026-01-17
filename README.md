@@ -18,14 +18,16 @@ Este repositorio esta pensado para esos escenarios reales.
 
 ## Arquitectura
 
+
 graph TB
-    AG[AI Agent] --> MCP[/mcp endpoint]
-    MCP --> API[FastAPI Router]
-    API --> SVC[PaymentService]
-    SVC --> IDEM[IdempotencyRepository]
-    IDEM --> DB[(SQLite)]
-    API -.->|Webhook| STRIPE[Stripe API]
-```
+  AG[AI Agent] --> MCP["/mcp endpoint"]
+  MCP --> API[FastAPI Router]
+  API --> SVC[PaymentService]
+  SVC --> IDEM[IdempotencyRepository]
+  IDEM --> DB[(SQLite)]
+  API -.->|Webhook| STRIPE[Stripe API]
+
+
 
 ## Quick start
 
