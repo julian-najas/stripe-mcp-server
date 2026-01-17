@@ -23,6 +23,7 @@ dependencies = [
 dev = [
     "pytest>=7.4.0",
     "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
     "httpx>=0.25.0",
     "ruff>=0.1.0",
     "alembic>=1.13.0",
@@ -37,6 +38,7 @@ testpaths = ["tests"]
 asyncio_mode = "auto"
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
+addopts = "--cov=app --cov-report=term-missing"
 
 [tool.ruff]
 line-length = 100
