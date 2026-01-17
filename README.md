@@ -1,8 +1,12 @@
 # Stripe Idempotent Payments Demo
 
-![CI](https://github.com/YOUR_USERNAME/stripe-idempotent-payments-demo/workflows/CI/badge.svg)
+[![CI](https://github.com/YOUR_USERNAME/stripe-idempotent-payments-demo/workflows/CI/badge.svg)](https://github.com/YOUR_USERNAME/stripe-idempotent-payments-demo/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-3120/)
 
 **Production-ready FastAPI application** demonstrating Stripe PaymentIntents with full idempotency, webhook handling, and MCP integration for AI agents.
+
+> 💡 **Replace `YOUR_USERNAME`** in badges above with your GitHub username after making repo public
 
 ---
 
@@ -15,6 +19,63 @@
 ✅ **MCP Server** - Expose payments as AI agent tools  
 ✅ **34 passing tests** - Unit, integration, and E2E coverage  
 ✅ **Production patterns** - Services layer, repositories, structured logging
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────┐
+│   Client    │ (API requests with Idempotency-Key)
+└──────┬──────┘
+       │
+       ▼
+┌─────────────────────────────────────────────┐
+│          FastAPI Application                │
+│  ┌──────────────────────────────────────┐  │
+│  │  API Layer (app/api/)                │  │
+│  │  - payments.py                       │  │
+│  │  - webhooks/stripe.py                │  │
+│  │  - MCP endpoint (/mcp)               │  │
+│  └──────────────┬───────────────────────┘  │
+│                 │                            │
+│  ┌──────────────▼───────────────────────┐  │
+│  │  Services Layer (app/services/)      │  │
+│  │  - payments.py (business logic)      │  │
+│  │  - stripe/client.py (API wrapper)    │  │
+│  └──────────────┬───────────────────────┘  │
+│                 │                            │
+│  ┌──────────────▼───────────────────────┐  │
+│  │  Repository Layer (app/db/)          │  │
+│  │  - IdempotencyRepository             │  │
+│  │  - PaymentRepository                 │  │
+│  └──────────────┬───────────────────────┘  │
+└─────────────────┼───────────────────────────┘
+                  │
+         ┌────────┴────────┐
+         ▼                 ▼
+    ┌─────────┐      ┌──────────┐
+    │   DB    │      │  Stripe  │
+    │ SQLite/ │      │   API    │
+    │Postgres │      │          │
+    └─────────┘      └──────────┘
+```
+
+**Flow Example: Create Payment**
+
+1. Client → `POST /api/v1/payments/intent` with `Idempotency-Key`
+2. API layer validates request → calls service
+3. Service checks idempotency cache in DB
+4. If not cached: creates Stripe PaymentIntent
+5. Stores result in DB with 24h TTL
+6. Returns response (or cached response if duplicate)
+
+**Webhook Flow**
+
+1. Stripe → `POST /api/v1/webhooks/stripe` with signature
+2. Webhook handler verifies HMAC signature
+3. Updates payment status in DB
+4. Marks webhook as received (idempotent)
 
 ---
 
