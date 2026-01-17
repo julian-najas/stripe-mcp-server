@@ -1,15 +1,3 @@
-# Local database files
 *.db
-*.db-journal
-*.db-wal
-*.db-shm
-stripe_demo.db
-
-# Server logs
 uvicorn.err
 uvicorn.out
-*.err
-*.out
-
-# Temporary metadata
-repo-info.json
