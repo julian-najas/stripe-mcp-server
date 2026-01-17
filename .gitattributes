@@ -1,0 +1,1 @@
+Industrial FastAPI + MCP server for Stripe PaymentIntents with real idempotency, verified webhooks and E2E tests.
