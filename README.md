@@ -1,100 +1,72 @@
-# 🚀 Stripe MCP Server
+# Servidor Stripe MCP (FastAPI)
 
 [![CI](https://github.com/julian-najas/stripe-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/julian-najas/stripe-mcp-server/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-3120/)
 [![GitHub stars](https://img.shields.io/github/stars/julian-najas/stripe-mcp-server?style=social)](https://github.com/julian-najas/stripe-mcp-server)
 
-> **Industrial-grade FastAPI + MCP server for Stripe PaymentIntents**  
-> Real idempotency, verified webhooks, 34 passing tests.
+Servidor FastAPI preparado para producción que implementa el protocolo MCP y gestiona PaymentIntents de Stripe con idempotencia, verificación de webhooks y pruebas.
 
----
+## Por qué existe
 
-## ✨ Why this matters
+Este repositorio muestra prácticas aplicables en entornos de producción, atendiendo aspectos que suelen omitirse en ejemplos de Stripe:
 
-Most Stripe examples are toys. **This is production-ready**:
-- ✅ **Idempotency** with TTL cache (no duplicate charges)
-- ✅ **Webhook signature verification** (HMAC + replay protection)
-- ✅ **MCP protocol** for AI agents to create/query payments
-- ✅ **34 tests** (unit + integration + E2E)
-- ✅ **Clean architecture** (Services → Repositories → DB)
+- Idempotencia con caché y TTL para evitar cargos duplicados.
+- Verificación de firma de webhooks (HMAC) y protección frente a duplicados.
+- Persistencia con SQLAlchemy; preparado para PostgreSQL o SQLite.
+- Exposición de herramientas MCP para que agentes puedan crear y consultar pagos.
+- Cobertura de pruebas: 34 tests (unitarios, integración y E2E).
 
-Perfect for:
-- 🤖 AI payment agents
-- 💳 SaaS billing systems
-- 🛠 Learning production Stripe patterns
+## Características
 
----
+- Creación de PaymentIntents en servidor con gestión de idempotencia.
+- Verificación de firmas y procesamiento seguro de webhooks.
+- Arquitectura en capas: routers → servicios → repositorios → Stripe/DB.
+- Endpoints MCP: crear intent y obtener estado de pago.
+- Registro estructurado y modo de autenticación configurable (DEBUG vs API_KEY).
 
-## 🎬 Quick Start
+## Arquitectura
+
+HTTP → FastAPI routers → Servicios → Repositorios → Stripe / Base de datos
+
+El adaptador MCP queda expuesto en /mcp.
+
+## Inicio rápido
+
+Instalación:
 
 ```bash
-# 1. Install dependencies
-uv pip install -e ".[dev]"  # or pip install -e ".[dev]"
+pip install -e ".[dev]"
+```
 
-# 2. Set up environment
-cp .env.example .env
-# Edit .env with your Stripe keys
+Ejecutar tests:
 
-# 3. Run tests
-pytest -v  # 34 tests pass ✅
+```bash
+pytest -v
+```
 
-# 4. Start server
+Iniciar servidor en desarrollo:
+
+```bash
 uvicorn app.main:app --reload --port 8000
 ```
 
-🌐 **API Docs**: http://localhost:8000/docs  
-🔍 **Health check**: http://localhost:8000/health
+## Configuración mínima
 
----
-
-## 📚 Key Features
-
-### 💰 Payment Intents
-```bash
-POST /api/v1/payments/intent
-Headers: 
-  Idempotency-Key: unique-key-123
-  Content-Type: application/json
-Body:
-  { "amount": 2000, "currency": "usd" }
-```
-
-### 🔔 Webhooks
-```bash
-POST /api/v1/webhooks/stripe
-Headers:
-  Stripe-Signature: t=...,v1=...
-```
-✅ Automatic signature verification  
-✅ Duplicate event protection
-
-### 🤖 MCP Tools
-AI agents can:
-- `create_payment_intent(amount, currency, metadata)`
-- `get_payment_status(payment_id)`
-
----
-
-## 🏗 Architecture
+Crea un archivo `.env` para desarrollo local con el contenido mínimo:
 
 ```
-HTTP Request
-    ↓
-FastAPI Router
-    ↓
-Service Layer (business logic)
-    ↓
-Repository Layer (DB/Stripe)
-    ↓
-SQLAlchemy Models / Stripe API
+DEBUG=true
+STRIPE_API_KEY=sk_test_xxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxx
+USE_STRIPE_REAL=false
 ```
 
-**MCP endpoint**: `/mcp` (stdio or SSE transport)
+En producción configura `DEBUG=false`, `API_KEY=<token>`, `USE_STRIPE_REAL=true` y `DATABASE_URL` para Postgres.
 
----
+## Despliegue (Railway)
 
-## 🚀 Deploy to Railway
+Comandos básicos:
 
 ```bash
 railway login
@@ -102,92 +74,39 @@ railway init
 railway up
 ```
 
-**Required env vars**:
-```env
+Variables de entorno necesarias en Railway:
+
+```
 DEBUG=false
-API_KEY=your-secret-key
+API_KEY=<token>
 STRIPE_API_KEY=sk_live_...
 STRIPE_WEBHOOK_SECRET=whsec_...
-USE_STRIPE_REAL=true
-DATABASE_URL=postgresql://...  # optional, defaults to SQLite
+USE_STRIPE_REAL=true|false
+DATABASE_URL=postgresql://...
 ```
 
----
+## Fragmentos de API
 
-## 📖 Documentation
+- Crear intent (idempotente): `POST /api/v1/payments/intent` con cabecera `Idempotency-Key`.
+- Obtener estado: `GET /api/v1/payments/{payment_id}`.
+- Webhook: `POST /api/v1/webhooks/stripe` con la cabecera de firma de Stripe.
 
-| File | Description |
-|------|-------------|
-| [`STRIPE_INTEGRATION.md`](./STRIPE_INTEGRATION.md) | Stripe setup & production checklist |
-| [`MCP_VALIDATION.md`](./MCP_VALIDATION.md) | MCP server validation guide |
-| [`SECURITY.md`](./SECURITY.md) | Auth modes & security notes |
-| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | How to contribute |
+## Documentación adicional
 
----
+- `STRIPE_INTEGRATION.md` – Referencia de integración con Stripe y lista de comprobación para producción.
+- `MCP_VALIDATION.md` – Validación y pruebas del servidor MCP.
+- `SECURITY.md` – Modos de autenticación y notas de seguridad.
 
-## 🧪 Testing
+## Seguridad
 
-```bash
-# All tests
-pytest -v
+- Verificación de firma de webhooks (HMAC-SHA256).
+- Autenticación por clave API en producción.
+- Validación de claves de idempotencia y protección ante eventos duplicados.
 
-# Unit tests only
-pytest tests/unit -v
+## Licencia
 
-# Integration tests
-pytest tests/integration -v
+MIT
 
-# E2E tests (requires Stripe test keys)
-pytest tests/e2e -v
-```
+## Autor
 
-**Coverage**: 34 tests covering:
-- Payment creation & idempotency
-- Webhook verification & processing
-- MCP tool exposure
-- Error handling
-
----
-
-## 🔐 Security
-
-- 🔒 Webhook signature verification (HMAC-SHA256)
-- 🔑 API key authentication (production mode)
-- 🛡 Idempotency key validation
-- 🚫 Duplicate event protection
-- 📝 Structured logging (no secrets)
-
-See [`SECURITY.md`](./SECURITY.md) for details.
-
----
-
-## 📦 Tech Stack
-
-- **FastAPI** - Modern Python API framework
-- **Stripe Python SDK** - Official Stripe library
-- **SQLAlchemy** - ORM with Postgres/SQLite support
-- **Pydantic** - Request/response validation
-- **MCP** - Model Context Protocol for AI agents
-- **pytest** - Testing framework
-
----
-
-## 🤝 Contributing
-
-PRs welcome! See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
-
----
-
-## 📄 License
-
-MIT - See [`LICENSE`](./LICENSE)
-
----
-
-## 🙋‍♂️ Author
-
-Built by [Julian Najas](https://github.com/julian-najas)
-
----
-
-**⭐ Star this repo if you find it useful!**
+Julian Najas (https://github.com/julian-najas)
