@@ -99,19 +99,12 @@ SQLAlchemy Models / Stripe API
 ```mermaid
 graph TB
     AG[AI Agent] -->|JSON-RPC| MCP[/mcp endpoint]
-    HTTP[HTTP Request] -->|JSON-RPC| MCP[/mcp endpoint]
     HTTP[HTTP Request] --> ROUTER[FastAPI Router]
-    MCP --> ROUTER[FastAPI Router]
     MCP --> ROUTER
-    ROUTER --> ROUTER
-    ROUTER --> PAYMENT[PaymentService]
     ROUTER --> PAYMENT[PaymentService]
     ROUTER --> WEBHOOK[WebhookService]
-    PAYMENT --> WEBHOOK[WebhookService]
     PAYMENT --> REPO[PaymentRepository]
-    WEBHOOK --> REPO[PaymentRepository]
     WEBHOOK --> REPO
-    REPO --> REPO
     REPO --> DB[(SQLite/PostgreSQL)]
     PAYMENT -.->|API calls| STRIPE[Stripe API]
     WEBHOOK -.->|Verify HMAC| STRIPE
