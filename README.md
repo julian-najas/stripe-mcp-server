@@ -6,6 +6,8 @@
 
 Industrial FastAPI + MCP server for Stripe PaymentIntents with idempotency, webhook verification, and 34 passing tests.
 
+🚀 Live demo (Railway): https://stripe-mcp-server.up.railway.app/health (actualiza si tu subdominio difiere)
+
 ## Why this exists
 - Most Stripe samples are demo-only; this repo mirrors production concerns: idempotency, signatures, persistence, and test coverage.
 - MCP exposure lets AI agents create and query payments through tools.
@@ -58,6 +60,15 @@ USE_STRIPE_REAL=false
 ```
 
 For production, set `DEBUG=false`, `API_KEY=<token>`, `USE_STRIPE_REAL=true`, `DATABASE_URL=postgresql://...`, and real Stripe secrets.
+
+## Deployment (Railway)
+```bash
+railway login
+railway init
+railway up
+```
+
+Ensure env vars in Railway: `DEBUG=false`, `API_KEY=<token>`, `STRIPE_API_KEY`, `STRIPE_WEBHOOK_SECRET`, `USE_STRIPE_REAL=true|false`, `DATABASE_URL` (if Postgres). Start command is in Procfile: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
 
 ## API snippets
 - Create intent (idempotent): `POST /api/v1/payments/intent` with `Idempotency-Key` header.
