@@ -18,10 +18,6 @@ Este repositorio esta pensado para esos escenarios reales.
 
 ## Arquitectura
 
-HTTP -> Services -> Repositories -> Stripe / DB  
-MCP actua como capa adaptadora entre el agente y la API.
-
-```mermaid
 graph TB
     AG[AI Agent] --> MCP[/mcp endpoint]
     MCP --> API[FastAPI Router]
