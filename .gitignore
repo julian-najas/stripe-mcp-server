@@ -1,3 +1,6 @@
-*.db
+# Ignoring previous artifacts
+
+# Ignore the following files
+stripe_demo.db
 uvicorn.err
 uvicorn.out
