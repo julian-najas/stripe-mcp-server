@@ -1,0 +1,14 @@
+2026-01-17 00:03:46,795 - fastapi_mcp.server - INFO - No auth config provided, skipping auth setup
+2026-01-17 00:03:46,809 - fastapi_mcp.server - INFO - MCP HTTP server listening at /mcp
+INFO:     Started server process [24900]
+INFO:     Waiting for application startup.
+2026-01-17 00:03:46,821 - app.core.logging - INFO - Running in debug mode
+2026-01-17 00:03:46,827 - app.core.logging - INFO - Starting Stripe Idempotent Payments Demo v0.1.0
+2026-01-17 00:03:46,828 - app.core.logging - INFO - Database: sqlite:///./stripe_demo.db
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-01-17 00:03:47,001 - app.core.logging - INFO - Request: GET /mcp - request_id: 57878d3d-d2f0-4e0e-bda6-8565a4b50b76
+2026-01-17 00:03:47,019 - mcp.server.streamable_http_manager - INFO - StreamableHTTP session manager started
+2026-01-17 00:03:47,019 - fastapi_mcp.transport.http - INFO - StreamableHTTP session manager is running
+2026-01-17 00:03:47,159 - mcp.server.streamable_http_manager - INFO - Created new transport with session ID: 5e1c780528e1494482df3b9690691ddf
+2026-01-17 00:03:47,498 - app.core.logging - INFO - Request: GET /mcp - request_id: ee7c29b6-a71b-4714-83c0-826c70244113
