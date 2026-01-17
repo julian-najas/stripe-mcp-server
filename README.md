@@ -44,11 +44,3 @@ English summary:
 Production-oriented FastAPI + MCP server for Stripe PaymentIntents with persistent idempotency, verified webhooks, and E2E tests.
 
 ---
-
-## Ahora ejecuta
-
-```bash
-git add README.md
-git commit -m "docs: remove follow-up list from README"
-git push
-```
