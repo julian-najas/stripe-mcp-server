@@ -30,15 +30,18 @@ cp .env.example .env
 pip install -r requirements.txt
 pytest -v
 uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
 Health:
 http://localhost:8000/health
-Documentación
+
+Documentación:
 STRIPE_INTEGRATION.md
 MCP_VALIDATION.md
 SECURITY.md
-English summary
+
+English summary:
 Production-oriented FastAPI + MCP server for Stripe PaymentIntents with persistent idempotency, verified webhooks, and E2E tests.
-```
 
 ---
 
@@ -50,17 +53,7 @@ git commit -m "docs: restore Spanish README and remove emojis"
 git push
 ```
 
-Resultado
-Tu repo vuelve a:
-hablar tu idioma
-respetar tu voz
-mantener nivel técnico
-sin postureo Copilot
-sin estética TikTok
-sin perder autoridad internacional (bloque en inglés)
 Cuando esté subido, seguimos con:
-Coverage badge
-Demo live
-Diagrama
-Pero ahora el repo vuelve a ser Julián Najas, no Copilot.
-Cuando hagas el push, dime y pasamos al siguiente paso quirúrgico.
+- Coverage badge
+- Demo live
+- Diagrama
