@@ -9,6 +9,13 @@ Operational infrastructure.
 
 ---
 
+## Guarantees
+
+- Core logic covered by tests
+- Webhooks verified with HMAC
+- Idempotency enforced
+- CI blocks regression
+
 ## What this server solves
 
 Stripe integrations usually fail in production because of:
