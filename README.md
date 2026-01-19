@@ -1,57 +1,62 @@
-# Stripe MCP Server (FastAPI)
+# Stripe MCP Production Server
 
-Servidor FastAPI + MCP para cobros con Stripe, diseñado para produccion: idempotencia real, verificacion de webhooks y tests E2E.
+**Stripe payments for AI agents in production.  
+Idempotency. Verified webhooks. Audit-ready.**
 
-## Que resuelve
+Not a demo.  
+Not an SDK.  
+Operational infrastructure.
 
-Muchos ejemplos de Stripe funcionan en demo, pero fallan cuando hay reintentos, latencia o webhooks duplicados.  
-Este repositorio esta pensado para esos escenarios reales.
+---
 
-## Caracteristicas
+## What this server solves
 
-- Stripe PaymentIntents (server-side)
-- Idempotencia persistente (TTL + verificacion por hash)
-- Webhooks verificados (signature verification)
-- MCP expuesto y filtrado (solo tools de pagos)
-- Tests E2E (34 tests)
-- Documentacion operativa
+Stripe integrations usually fail in production because of:
 
-## Arquitectura
+- Retries with different payloads
+- Duplicated webhooks
+- Partial failures
+- Agent hallucinations calling payment tools
 
-```mermaid
-graph TB
-  AG[AI Agent] --> MCP["/mcp endpoint"]
-  MCP --> API[FastAPI Router]
-  API --> SVC[PaymentService]
-  SVC --> IDEM[IdempotencyRepository]
-  IDEM --> DB[(SQLite)]
-  API -.->|Webhook| STRIPE[Stripe API]
-```
+This server enforces:
 
+- Persistent idempotency
+- Webhook signature verification
+- Deterministic responses
+- E2E tested payment flows
 
+---
 
+## MCP Identity
 
-## Quick start
+This server exposes a Model Context Protocol interface for AI agents.
 
-Requisitos: Python 3.12
+It can be consumed by any MCP-compatible client using `server.json`.
+
+---
+
+## Tool risk model
+
+| Tool | Description | Risk |
+|------|-------------|------|
+| create_payment_intent | Create Stripe PaymentIntent | Medium |
+| confirm_payment_intent | Confirm intent with idempotency | Medium |
+| handle_webhook | Consume verified webhook | Low |
+| refund_payment | Refund an intent | High |
+| list_intents | Query intents | Low |
+
+High-risk tools must be restricted by role or environment.
+
+---
+
+## Quickstart — 5 minutes
 
 ```bash
+git clone https://github.com/julian-najas/stripe-mcp-server
+cd stripe-mcp-server
 cp .env.example .env
-pip install -r requirements.txt
-pytest -v
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
+pip install -e .
+uvicorn app.main:app --reload
+Set Stripe test keys in .env.
 
-Health:
-
-[http://localhost:8000/health](http://localhost:8000/health)
-
-## Documentacion
-
-* STRIPE_INTEGRATION.md
-* MCP_VALIDATION.md
-* SECURITY.md
-
-## English summary
-
-Production-oriented FastAPI + MCP server for Stripe PaymentIntents with persistent idempotency, verified webhooks, and E2E tests.
+Your MCP Stripe server is now running.
