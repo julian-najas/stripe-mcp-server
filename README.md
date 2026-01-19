@@ -1,5 +1,23 @@
 # Stripe MCP Production Server
 
+This is not:
+
+- Not a Stripe SDK
+- Not a tutorial
+- Not a playground
+
+This is a production MCP payment server.
+---
+## Agent roles
+
+| Role      | Allowed actions      |
+|-----------|---------------------|
+| read_only | list_intents        |
+| payments  | create, confirm     |
+| admin     | refunds             |
+
+Role is resolved from ENV or upstream agent identity.
+
 **Stripe payments for AI agents in production.  
 Idempotency. Verified webhooks. Audit-ready.**
 
