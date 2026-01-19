@@ -84,4 +84,16 @@ pip install -e .
 uvicorn app.main:app --reload
 Set Stripe test keys in .env.
 
+
 Your MCP Stripe server is now running.
+
+## Example flow — SaaS subscription
+
+1. Agent receives: "Create 29€/month subscription for user@email.com"
+2. list_customers(email)
+3. create_payment_intent(amount=2900, customer_id)
+4. Frontend confirms
+5. Webhook validates
+6. Agent updates user status
+
+Every step is idempotent and auditable.
