@@ -16,7 +16,6 @@ Este repositorio esta pensado para esos escenarios reales.
 - Tests E2E (34 tests)
 - Documentacion operativa
 
-
 ## Arquitectura
 
 ```mermaid
