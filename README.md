@@ -24,7 +24,6 @@ It provides:
 
 * Not a Stripe SDK
 * Not a tutorial
-* Not a playground
 * Not a demo project
 
 This repository exists to run in production.
