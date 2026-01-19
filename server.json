@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "stripe-production-server": {
+      "command": "uvicorn",
+      "args": [
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ],
+      "env": {
+        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}",
+        "STRIPE_WEBHOOK_SECRET": "${STRIPE_WEBHOOK_SECRET}",
+        "LOG_LEVEL": "${LOG_LEVEL:-INFO}",
+        "ENV": "${ENV:-development}"
+      }
+    }
+  }
+}
