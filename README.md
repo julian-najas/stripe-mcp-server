@@ -1,15 +1,148 @@
-# Stripe MCP Production Server
+# Stripe MCP Server
 
-This is not:
+Production-grade Stripe integration for AI agents using the Model Context Protocol (MCP).
 
-- Not a Stripe SDK
-- Not a tutorial
-- Not a playground
-
-This is a production MCP payment server.
+This server exposes Stripe payment operations as MCP tools with strict idempotency, webhook verification and audit-ready behavior.
 
 ---
 
+## What this is
+
+A FastAPI server that allows AI agents to safely interact with Stripe in production environments.
+
+It provides:
+
+* Deterministic payment execution
+* Persistent idempotency
+* Verified Stripe webhooks
+* MCP-compatible tool interface
+* Audit-friendly flows
+
+---
+
+## What this is not
+
+* Not a Stripe SDK
+* Not a tutorial
+* Not a playground
+* Not a demo project
+
+This repository exists to run in production.
+
+---
+
+## Core features
+
+* Stripe PaymentIntents integration
+* End-to-end idempotency enforcement
+* HMAC verified webhooks
+* MCP tool exposure
+* Role-based tool risk separation
+* E2E test coverage
+* CI regression protection
+
+---
+
+## Architecture
+
+```
+AI Agent
+   ↓
+MCP Client
+   ↓
+Stripe MCP Server (FastAPI)
+   ↓
+Stripe API + Webhooks
+```
+
+The agent never talks directly to Stripe.
+
+All payments go through this server.
+
+---
+
+## MCP tools
+
+| Tool                   | Description                   | Risk   |
+| ---------------------- | ----------------------------- | ------ |
+| create_payment_intent  | Create a Stripe PaymentIntent | Medium |
+| confirm_payment_intent | Confirm with idempotency      | Medium |
+| handle_webhook         | Process verified webhook      | Low    |
+| refund_payment         | Refund a payment              | High   |
+| list_intents           | Query intents                 | Low    |
+
+High-risk tools must be restricted by role or environment.
+
+---
+
+## Security model
+
+* Webhook signatures verified using Stripe HMAC
+* Idempotency keys enforced at request and webhook level
+* Deterministic responses
+* No duplicated side effects
+* Audit-ready logs
+
+---
+
+## Quick start
+
+```bash
+git clone https://github.com/julian-najas/stripe-mcp-server
+cd stripe-mcp-server
+cp .env.example .env
+pip install -e .
+uvicorn app.main:app --reload
+```
+
+Set your Stripe test keys in `.env`.
+
+The MCP server will be available for any MCP-compatible client using `server.json`.
+
+---
+
+## Example flow
+
+1. Agent requests a payment creation
+2. MCP tool calls create_payment_intent
+3. Frontend confirms
+4. Stripe webhook arrives
+5. Signature is verified
+6. Idempotency is enforced
+7. Agent updates user state
+
+Every step is deterministic and auditable.
+
+---
+
+## Testing
+
+The repository includes:
+
+* Unit tests
+* Integration tests
+* End-to-end Stripe flows
+* CI coverage reporting
+
+---
+
+## Deployment
+
+The server is container-ready and compatible with Railway, Docker and standard ASGI deployments.
+
+---
+
+## License
+
+MIT
+
+---
+
+## Status
+
+This repository represents a production-grade MCP payment server.
+
+---
 ## ¿Qué acabamos de lograr?
 
 Tu repo ahora es:
@@ -26,9 +159,10 @@ Solo lo convertimos en producto MCP.
 
 ---
 ---
+
 ## Agent roles
 
-| Role      | Allowed actions      |
+| Role      | Permissions         |
 |-----------|---------------------|
 | read_only | list_intents        |
 | payments  | create, confirm     |
@@ -43,7 +177,6 @@ Not a demo.
 Not an SDK.  
 Operational infrastructure.
 
----
 
 ## Guarantees
 
@@ -81,7 +214,7 @@ It can be consumed by any MCP-compatible client using `server.json`.
 ## Tool risk model
 
 | Tool | Description | Risk |
-|------|-------------|------|
+| ------ | ------------- | ------ |
 | create_payment_intent | Create Stripe PaymentIntent | Medium |
 | confirm_payment_intent | Confirm intent with idempotency | Medium |
 | handle_webhook | Consume verified webhook | Low |
@@ -94,13 +227,25 @@ High-risk tools must be restricted by role or environment.
 
 ## Quickstart — 5 minutes
 
+
 ```bash
 git clone https://github.com/julian-najas/stripe-mcp-server
 cd stripe-mcp-server
 cp .env.example .env
-pip install -e .
+pip install -e ".[dev]"
 uvicorn app.main:app --reload
-Set Stripe test keys in .env.
+# Set Stripe test keys in .env
+```
+
+```mermaid
+graph TB
+	AG[AI Agent] --> MCP["/mcp endpoint"]
+	MCP --> API[FastAPI Router]
+	API --> SVC[PaymentService]
+	SVC --> IDEM[IdempotencyRepository]
+	IDEM --> DB[(SQLite)]
+	API -.->|Webhook| STRIPE[Stripe API]
+```
 
 
 Your MCP Stripe server is now running.

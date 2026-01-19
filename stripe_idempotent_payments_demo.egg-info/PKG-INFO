@@ -1,0 +1,22 @@
+Metadata-Version: 2.4
+Name: stripe-idempotent-payments-demo
+Version: 0.1.0
+Summary: FastAPI application for idempotent Stripe payments with MCP integration
+Author-email: Developer <dev@example.com>
+License: MIT
+Requires-Python: >=3.12
+License-File: LICENSE
+Requires-Dist: fastapi>=0.104.0
+Requires-Dist: uvicorn[standard]>=0.24.0
+Requires-Dist: pydantic-settings>=2.1.0
+Requires-Dist: stripe>=7.0.0
+Requires-Dist: sqlalchemy>=2.0.0
+Requires-Dist: fastapi-mcp>=0.4.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.21.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.1.0; extra == "dev"
+Requires-Dist: httpx>=0.25.0; extra == "dev"
+Requires-Dist: ruff>=0.1.0; extra == "dev"
+Requires-Dist: alembic>=1.13.0; extra == "dev"
+Dynamic: license-file
